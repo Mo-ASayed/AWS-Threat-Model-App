@@ -1,34 +1,33 @@
 resource "aws_lb" "tm_alb" {
-  name               = "tm-alb"
+  name               = var.alb_name
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.tm_ecs_sg.id]
-  subnets            = [aws_subnet.tm_public_subnet_1.id, aws_subnet.tm_public_subnet_2.id]
+  security_groups    = [var.security_group_id]
+  subnets            = var.subnet_ids
 
   enable_deletion_protection = false
 
   tags = {
-    Name = "tm-alb"
+    Name = var.alb_name
   }
 }
 
 resource "aws_lb_target_group" "tm_target_group" {
-  name        = "tm-target-group"
-  port        = 3000
+  name        = var.target_group_name
+  port        = var.target_port
   protocol    = "HTTP"
-  vpc_id      = aws_vpc.tm_vpc.id
+  vpc_id      = var.vpc_id
   target_type = "ip"
-
 }
 
 resource "aws_lb_listener" "tm_http" {
   load_balancer_arn = aws_lb.tm_alb.arn
   port              = "80"
   protocol          = "HTTP"
-  
+
   default_action {
     type = "redirect"
-  
+
     redirect {
       port        = "443"
       protocol    = "HTTPS"
@@ -42,7 +41,7 @@ resource "aws_lb_listener" "tm_https" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:acm:us-east-1:767398132018:certificate/f09d2fe3-f013-4e45-8458-fdbc292d06f1"
+  certificate_arn   = var.certificate_arn
 
   default_action {
     type = "forward"
