@@ -40,7 +40,6 @@ module "ecs" {
   listener_http_arn  = module.alb.http_listener
   listener_https_arn = module.alb.https_listener
 
-  # Control whether to create the IAM role or use an existing one
   create_iam_role    = false
   execution_role_arn = "arn:aws:iam::767398132018:role/ecsTaskExecutionRole"
   task_role_arn      = "arn:aws:iam::767398132018:role/ecsTaskExecutionRole"
@@ -54,7 +53,7 @@ module "route53" {
   zone_name    = "lab.mohammedsayed.com"
   record_name  = "tm.lab.mohammedsayed.com"
   ttl          = 300
-  alb_dns_name = module.alb.alb_arn
+  alb_dns_name = module.alb.alb_dns_name
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
