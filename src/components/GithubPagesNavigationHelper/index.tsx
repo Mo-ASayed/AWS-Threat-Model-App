@@ -37,7 +37,7 @@ const GithubPagesNavigationHelper: FC<PropsWithChildren<{}>> = ({
         return s.replace(/~and~/g, '&');
       }).join('?');
 
-      navigate(ROUTE_BASE_PATH + '/' + decoded + l.hash);
+      void navigate(ROUTE_BASE_PATH + '/' + decoded + l.hash);
     }
   }, [navigate]);
 

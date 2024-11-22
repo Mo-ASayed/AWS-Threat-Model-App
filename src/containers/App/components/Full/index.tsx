@@ -68,23 +68,23 @@ const Full: FC = () => {
   const [workspaceId, setWorkspaceId] = useState(initialWorkspaceId || 'default');
 
   const handleWorkspaceChanged = useCallback((newWorkspaceId: string) => {
-    navigate(generateUrl(ROUTE_WORKSPACE_HOME, searchParms, newWorkspaceId));
+    void navigate(generateUrl(ROUTE_WORKSPACE_HOME, searchParms, newWorkspaceId));
   }, [navigate, searchParms]);
 
   const handleNavigationView = useCallback((route: string) => {
-    navigate(generateUrl(route, searchParms, workspaceId));
+    void navigate(generateUrl(route, searchParms, workspaceId));
   }, [navigate, searchParms, workspaceId]);
 
   const handleThreatListView = useCallback((filter?: ThreatStatementListFilter) => {
-    navigate(generateUrl(ROUTE_THREAT_LIST, searchParms, workspaceId), {
-      state: filter ? {
-        filter,
-      } : undefined,
+    void navigate(generateUrl(ROUTE_THREAT_LIST, searchParms, workspaceId), {
+      state: filter
+        ? { filter }
+        : undefined,
     });
   }, [navigate, workspaceId, searchParms]);
 
   const handleThreatEditorView = useCallback((newThreatId?: string) => {
-    navigate(generateUrl(ROUTE_THREAT_EDITOR, searchParms, workspaceId, newThreatId));
+    void navigate(generateUrl(ROUTE_THREAT_EDITOR, searchParms, workspaceId, newThreatId));
   }, [navigate, workspaceId, searchParms]);
 
   const navigationItems: SideNavigationProps.Item[] = useMemo(() => {
@@ -152,11 +152,11 @@ const Full: FC = () => {
   }, []);
 
   const handleImported = useCallback(() => {
-    navigate(generateUrl(ROUTE_VIEW_THREAT_MODEL, searchParms, workspaceId));
+    void navigate(generateUrl(ROUTE_VIEW_THREAT_MODEL, searchParms, workspaceId));
   }, [navigate, workspaceId, searchParms]);
 
   const handleDefineWorkload = useCallback(() => {
-    navigate(generateUrl(ROUTE_APPLICATION_INFO, searchParms, workspaceId));
+    void navigate(generateUrl(ROUTE_APPLICATION_INFO, searchParms, workspaceId));
   }, [navigate, workspaceId, searchParms]);
 
   const notifications = useNotifications();

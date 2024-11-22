@@ -67,6 +67,12 @@
     <li>Best practices for threat modelling and simulation in a cloud environment.</li>
 </ul>
 
+<h2> Debugging - Good to know!</h2>
+<ul>
+    <li>Fixing the 'waitFor' issue by using <strong>yarn add -D @testing-library/dom</strong> to install the correct dependencies.</li>
+</ul>
+
+
 <hr>
 
 <h2>🤝 Contributing</h2>

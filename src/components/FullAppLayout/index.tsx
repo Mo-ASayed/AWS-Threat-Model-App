@@ -116,17 +116,17 @@ const AppLayout: FC<PropsWithChildren<AppLayoutProps>> = ({
   }, [location]);
 
   const onNavigate: CancelableEventHandler<BreadcrumbGroupProps.ClickDetail | SideNavigationProps.FollowDetail> =
-    useCallback(
-      (e) => {
-        if (!e.detail.external) {
-          e.preventDefault();
-          e.stopPropagation();
-          setContentType(undefined);
-          navigate(e.detail.href);
-        }
-      },
-      [navigate],
-    );
+  useCallback(
+    async (e) => { // Mark the function async
+      if (!e.detail.external) {
+        e.preventDefault();
+        e.stopPropagation();
+        setContentType(undefined); // If async, await this
+        await navigate(e.detail.href); // Await async navigate call
+      }
+    },
+    [navigate],
+  );
 
   return (
     <AppLayoutContext.Provider
