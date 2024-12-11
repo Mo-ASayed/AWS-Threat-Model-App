@@ -51,7 +51,7 @@ module "ecs" {
 module "route53" {
   source       = "./modules/route53"
   zone_name    = "lab.mohammedsayed.com"
-  record_name  = "tm.lab.mohammedsayed.com"
+  record_name  = "osprey.lab.mohammedsayed.com"
   ttl          = 300
   alb_dns_name = module.alb.alb_dns_name
 }
