@@ -63,6 +63,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      
+      - name: Install Terraform
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y wget unzip
+          wget https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_amd64.zip -O terraform.zip
+          unzip terraform.zip
+          sudo mv terraform /usr/local/bin/
+          terraform version
 
       - name: Terraform Format
         run: terraform fmt --recursive
