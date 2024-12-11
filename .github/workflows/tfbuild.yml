@@ -69,8 +69,10 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y wget unzip
           wget https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_amd64.zip -O terraform.zip
-          unzip -o terraform.zip
-          sudo mv terraform /usr/local/bin/
+          mkdir -p temp_terraform_dir
+          unzip -o terraform.zip -d temp_terraform_dir
+          sudo mv temp_terraform_dir/terraform /usr/local/bin/
+          rm -rf temp_terraform_dir
           terraform version
 
 
