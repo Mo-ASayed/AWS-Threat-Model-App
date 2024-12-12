@@ -20,7 +20,7 @@ module "alb" {
   target_group_name = "tm-target-group"
   target_port       = 3000
   vpc_id            = module.vpc.vpc_id
-  certificate_arn   = "arn:aws:acm:us-east-1:767398132018:certificate/f09d2fe3-f013-4e45-8458-fdbc292d06f1"
+  certificate_arn   = "arn:aws:acm:us-east-1:767398132018:certificate/0d8b3d30-0825-476a-94fe-6dc82d775a7f"
 }
 
 module "ecs" {
