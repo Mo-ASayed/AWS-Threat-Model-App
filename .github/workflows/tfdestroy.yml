@@ -28,7 +28,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.6.0
+          terraform_version: 1.10.0
 
   terraform_destroy:
     name: 'Terraform Destroy'
@@ -41,7 +41,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.6.0
+          terraform_version: 1.10.0
 
       - name: Terraform Destroy
         working-directory: terraform 
