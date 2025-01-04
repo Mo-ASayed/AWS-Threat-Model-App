@@ -46,12 +46,10 @@ module "ecs" {
   iam_role_name      = "ecsTaskExecutionRole"
 }
 
-
-
 module "route53" {
   source       = "./modules/route53"
   zone_name    = "lab.mohammedsayed.com"
-  record_name  = "osprey.lab.mohammedsayed.com"
+  record_name  = "blank.lab.mohammedsayed.com"
   ttl          = 300
   alb_dns_name = module.alb.alb_dns_name
 }

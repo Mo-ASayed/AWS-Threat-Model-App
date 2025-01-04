@@ -81,6 +81,11 @@ jobs:
             exit 1
           fi
 
+      - name: Run Checkov
+        run: |
+          pip install checkov
+          checkov -d terraform
+
       - name: Terraform Initialise
         working-directory: terraform  
         run: terraform init
