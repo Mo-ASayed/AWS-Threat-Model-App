@@ -5,7 +5,11 @@ resource "aws_lb" "tm_alb" {
   security_groups    = [var.security_group_id]
   subnets            = var.subnet_ids
   drop_invalid_header_fields = true
-
+  access_logs {
+    bucket  = "threat-modeling-tool--tf"
+    prefix  = "access-logs"
+    enabled = true
+  }
   # checkov:skip=CKV_AWS_150 Reason: Deletion protection is disabled for easier cleanup
   enable_deletion_protection = false
 
