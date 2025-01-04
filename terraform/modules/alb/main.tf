@@ -1,4 +1,3 @@
-# checkov:skip=CKV_AWS_150 This ALB deletion protection is disabled for easier cleanup during terraform destroy
 resource "aws_lb" "tm_alb" {
   name               = var.alb_name
   internal           = false
@@ -6,6 +5,7 @@ resource "aws_lb" "tm_alb" {
   security_groups    = [var.security_group_id]
   subnets            = var.subnet_ids
 
+  # checkov:skip=CKV_AWS_150 Reason: Deletion protection is disabled for easier cleanup
   enable_deletion_protection = false
 
   tags = {
