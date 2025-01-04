@@ -4,6 +4,7 @@ resource "aws_lb" "tm_alb" {
   load_balancer_type = "application"
   security_groups    = [var.security_group_id]
   subnets            = var.subnet_ids
+  drop_invalid_header_fields = true
 
   # checkov:skip=CKV_AWS_150 Reason: Deletion protection is disabled for easier cleanup
   enable_deletion_protection = false
