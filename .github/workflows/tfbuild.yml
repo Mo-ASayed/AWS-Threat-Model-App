@@ -54,7 +54,7 @@ jobs:
               curl -H "Content-Type: application/json" \
               -d "{\"content\": \"✅ Security scan successful: in repo ${{ github.event.repository.name }}, ${BRANCH_NAME} at ${TIMESTAMP}. Committer: ${COMMITTER}\"}" \
               ${{ secrets.DISCORD_WEBHOOK_URL }}
-
+              
   terraform_static_analysis:
     name: 'Terraform Static Analysis'
     needs: security_scan_app

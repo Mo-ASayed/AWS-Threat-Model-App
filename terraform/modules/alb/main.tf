@@ -48,7 +48,6 @@ resource "aws_lb_listener" "tm_https" {
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
   certificate_arn   = var.certificate_arn
-
   default_action {
     type = "forward"
     forward {
@@ -60,6 +59,19 @@ resource "aws_lb_listener" "tm_https" {
         enabled  = false
         duration = 1
       }
+      
     }
+  }
+}
+
+resource "aws_route53_health_check" "tm_health_check" {
+  port              = 443
+  type              = "HTTPs"
+  resource_path     = "/"
+  failure_threshold = "5"
+  request_interval  = "30"
+
+  tags = {
+    Name = "tf-test-health-check"
   }
 }
