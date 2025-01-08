@@ -1,9 +1,9 @@
 resource "aws_lb" "tm_alb" {
-  name               = var.alb_name
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [var.security_group_id]
-  subnets            = var.subnet_ids
+  name                       = var.alb_name
+  internal                   = false
+  load_balancer_type         = "application"
+  security_groups            = [var.security_group_id]
+  subnets                    = var.subnet_ids
   drop_invalid_header_fields = true
   access_logs {
     bucket  = "threat-modeling-tool--tf"
@@ -24,6 +24,15 @@ resource "aws_lb_target_group" "tm_target_group" {
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
+
+  health_check {
+    path                = "/"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 3
+    matcher             = "200"
+  }
 }
 
 resource "aws_lb_listener" "tm_http" {
@@ -59,19 +68,8 @@ resource "aws_lb_listener" "tm_https" {
         enabled  = false
         duration = 1
       }
-      
+
     }
   }
 }
 
-resource "aws_route53_health_check" "tm_health_check" {
-  port              = 443
-  type              = "HTTPs"
-  resource_path     = "/"
-  failure_threshold = "5"
-  request_interval  = "30"
-
-  tags = {
-    Name = "tf-test-health-check"
-  }
-}
