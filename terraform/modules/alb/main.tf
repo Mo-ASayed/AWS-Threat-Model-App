@@ -6,7 +6,7 @@ resource "aws_lb" "tm_alb" {
   subnets                    = var.subnet_ids
   drop_invalid_header_fields = true
   access_logs {
-    bucket  = "threat-modeling-tool--tf"
+    bucket  = aws_s3_bucket.access_logs_bucket.bucket
     prefix  = "access-logs"
     enabled = true
   }
@@ -73,3 +73,33 @@ resource "aws_lb_listener" "tm_https" {
   }
 }
 
+resource "aws_s3_bucket" "access_logs_bucket" {
+  bucket = "threat-modeling-tool--tf"
+}
+
+
+resource "aws_s3_bucket_policy" "access_logs_policy" {
+  bucket = aws_s3_bucket.access_logs_bucket.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "elasticloadbalancing.amazonaws.com"
+        },
+        Action = "s3:PutObject",
+        Resource = "arn:aws:s3:::threat-modeling-tool--tf/access-logs/*",
+        Condition = {
+          StringEquals = {
+            "aws:SourceAccount" = "767398132018"
+          },
+          ArnLike = {
+            "aws:SourceArn" = "arn:aws:elasticloadbalancing:us-east-1:767398132018:loadbalancer/*"
+          }
+        }
+      }
+    ]
+  })
+}
