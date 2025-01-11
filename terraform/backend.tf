@@ -4,6 +4,6 @@ terraform {
     key            = "state"
     region         = "us-east-1"
     encrypt        = true
-    # dynamodb_table = "Terraform-state-locking-table"
+    dynamodb_table = "Terraform-state-locking-table"
   }
 }
