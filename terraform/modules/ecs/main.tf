@@ -131,11 +131,11 @@ resource "aws_iam_role_policy_attachment" "tm_execution_policy" {
 }
 
 
-# resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
-#   count = var.create_iam_role ? 1 : 0
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
+  count = var.create_iam_role ? 1 : 0
 
-#   role       = aws_iam_role.ecs_task_execution_role[count.index].name
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-# }
+  role       = aws_iam_role.ecs_task_execution_role[count.index].name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
 
 

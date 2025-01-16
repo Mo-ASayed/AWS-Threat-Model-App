@@ -10,6 +10,7 @@ resource "aws_lb" "tm_alb" {
   #   prefix  = "access-logs"
   #   enabled = true
   # }
+  
   # checkov:skip=CKV_AWS_150 Reason: Deletion protection is disabled for easier cleanup
   enable_deletion_protection = false
 
@@ -27,11 +28,12 @@ resource "aws_lb_target_group" "tm_target_group" {
 
   health_check {
     path                = "/"
-    interval            = 30
-    timeout             = 5
+    port                = 3000
+    interval            = 300
+    timeout             = 60
     healthy_threshold   = 2
     unhealthy_threshold = 3
-    matcher             = "200"
+    matcher             = "200-499"
   }
 }
 
@@ -76,7 +78,6 @@ resource "aws_lb_listener" "tm_https" {
 # resource "aws_s3_bucket" "access_logs_bucket" {
 #   bucket = "threat-modeling-tool--tf"
 # }
-
 
 # resource "aws_s3_bucket_policy" "access_logs_policy" {
 #   bucket = aws_s3_bucket.access_logs_bucket.id

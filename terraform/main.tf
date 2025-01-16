@@ -27,8 +27,8 @@ module "ecs" {
   source             = "./modules/ecs"
   cluster_name       = "tm-cluster"
   task_family        = "tm-task"
-  task_cpu           = "1024"
-  task_memory        = "3072"
+  task_cpu           = "2048"
+  task_memory        = "4096"
   container_name     = "tm-container"
   container_image    = "767398132018.dkr.ecr.us-east-1.amazonaws.com/mohammedsayed/threat-composer"
   container_port     = 3000
@@ -49,7 +49,7 @@ module "ecs" {
 module "route53" {
   source       = "./modules/route53"
   zone_name    = "lab.mohammedsayed.com"
-  record_name  = "blank.lab.mohammedsayed.com"
+  record_name  = "tm.lab.mohammedsayed.com"
   ttl          = 300
   alb_dns_name = module.alb.alb_dns_name
 }
