@@ -88,3 +88,10 @@ variable "create_iam_role" {
   type        = bool
   default     = true
 }
+
+variable "container_image" {
+  description = "The image of the applications container"
+  type = string
+  
+  default = "767398132018.dkr.ecr.us-east-1.amazonaws.com/mohammedsayed/threat-composer"
+}
