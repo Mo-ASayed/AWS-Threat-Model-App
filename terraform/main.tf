@@ -36,6 +36,7 @@ module "ecs" {
   desired_count      = 1
   subnet_ids         = module.vpc.public_subnets
   security_group_ids = [module.security_group.sg_id]
+  // todo : add something here regarding using for statements
   target_group_arn   = module.alb.target_group_arn
   listener_http_arn  = module.alb.http_listener
   listener_https_arn = module.alb.https_listener
