@@ -1,1 +1,0 @@
-# soft_fail: true # Doesnt cause pipeline to fail even with checkov issues 
