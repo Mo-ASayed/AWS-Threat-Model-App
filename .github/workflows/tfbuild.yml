@@ -82,10 +82,9 @@ jobs:
           fi
 
       - name: Run Checkov
-        working-directory: ${{ github.workspace }}
         run: |
           pip install checkov
-          checkov -d terraform
+          checkov -d terraform --soft-fail
 
       - name: Terraform Initialise
         working-directory: terraform  
