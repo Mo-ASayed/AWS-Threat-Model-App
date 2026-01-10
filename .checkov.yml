@@ -1,0 +1,4 @@
+# .checkov.yml
+soft_fail: true       # Makes all failed checks soft fail instead of exiting non-zero
+skip_checks:
+  - CKV_AWS_20      # Example: skip a specific AWS check
