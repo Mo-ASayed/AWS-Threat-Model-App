@@ -24,12 +24,12 @@ module "twingate_connector" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 5.6"
 
-  name                   = "tm-twingate-connector"
-  ami                    = data.aws_ami.latest.id
-  instance_type          = "t2a.micro"
+  name          = "tm-twingate-connector"
+  ami           = data.aws_ami.latest.id
+  instance_type = "t2a.micro"
 
   # Use existing VPC subnet and security group
-  subnet_id              = module.vpc.public_subnets[0]   # pick a subnet with internet access
+  subnet_id              = module.vpc.public_subnets[0] # pick a subnet with internet access
   vpc_security_group_ids = [module.security_group.sg_id]
 
   # user_data to configure Twingate
@@ -51,13 +51,14 @@ module "twingate_connector" {
 }
 
 
+# 1️⃣ Create the Twingate resource
 resource "twingate_resource" "tm_app" {
   name              = "TM App"
-  address           = module.alb.alb_dns_name 
-  remote_network_id = twingate_remote_network.tm_vpc.id
+  address           = module.alb.alb_dns_name
+  remote_network_id = twingate_remote_network.aws_network.id
 
-  access {
-    group_ids = [twingate_group.admins.id] 
+  access_group {
+    group_id = twingate_group.admins.id
   }
 }
 

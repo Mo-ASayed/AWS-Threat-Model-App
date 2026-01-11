@@ -30,14 +30,6 @@ resource "aws_security_group" "tm_ecs_sg" {
 
   }
 
-  ingress {
-  from_port   = 3000
-  to_port     = 3000
-  protocol    = "tcp"
-  cidr_blocks = [twingate_remote_network.my_aws_network.cidr]
-  description = "Allow traffic from Twingate"
-}
-
   egress {
     from_port   = 80
     to_port     = 80

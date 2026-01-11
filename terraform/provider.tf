@@ -7,7 +7,7 @@ terraform {
       version = "5.67.0"
     }
     twingate = {
-      source = "Twingate/twingate"
+      source  = "Twingate/twingate"
       version = "3.7.0"
     }
   }
@@ -19,6 +19,6 @@ provider "aws" {
 
 provider "twingate" {
   api_token = var.twingate_api_token
-  network = "ssltd"
+  network   = "ssltd"
 
 }
