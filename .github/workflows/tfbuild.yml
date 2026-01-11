@@ -17,6 +17,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: 'us-east-1'
   DISCORD_WEBHOOK_URL: ${{secrets.DISCORD_WEBHOOK_URL}}
+  TF_VAR_twingate_api_token: ${{ secrets.TWINGATE_FULL_ACCESS }}
 
 jobs:
 
