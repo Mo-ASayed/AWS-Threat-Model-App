@@ -46,13 +46,13 @@ resource "aws_security_group" "tm_ecs_sg" {
     description = "Allow outbound HTTPS traffic"
 
   }
-egress {
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
-  description = "Allow all outbound traffic"
-}
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all outbound traffic"
+  }
 
   tags = {
     Name = var.sg_name

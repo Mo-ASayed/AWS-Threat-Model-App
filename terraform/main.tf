@@ -21,6 +21,7 @@ module "alb" {
   target_port       = 3000
   vpc_id            = module.vpc.vpc_id
   certificate_arn   = "arn:aws:acm:us-east-1:767398132018:certificate/0d8b3d30-0825-476a-94fe-6dc82d775a7f"
+  route53_zone_id   = module.route53.zone_id
 }
 
 module "ecs" {

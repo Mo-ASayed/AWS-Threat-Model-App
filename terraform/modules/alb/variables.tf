@@ -32,3 +32,8 @@ variable "certificate_arn" {
   type        = string
   description = "ARN of the SSL certificate"
 }
+
+variable "route53_zone_id" {
+  description = "The ID of the Route53 hosted zone for ACM DNS validation"
+  type        = string
+}

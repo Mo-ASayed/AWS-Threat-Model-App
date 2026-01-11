@@ -5,13 +5,6 @@ resource "aws_lb" "tm_alb" {
   security_groups            = [var.security_group_id]
   subnets                    = var.subnet_ids
   drop_invalid_header_fields = true
-  # access_logs {
-  #   bucket  = aws_s3_bucket.access_logs_bucket.bucket
-  #   prefix  = "access-logs"
-  #   enabled = true
-  # }
-  
-  # checkov:skip=CKV_AWS_150 Reason: Deletion protection is disabled for easier cleanup
   enable_deletion_protection = false
 
   tags = {
@@ -53,12 +46,34 @@ resource "aws_lb_listener" "tm_http" {
   }
 }
 
+resource "aws_acm_certificate" "tm_cert" {
+  domain_name       = "tm.lab.mohammedsayed.com"
+  validation_method = "DNS"
+}
+
+resource "aws_route53_record" "tm_cert_validation" {
+  for_each = { for dvo in aws_acm_certificate.tm_cert.domain_validation_options : dvo.domain_name => dvo }
+
+  name    = each.value.resource_record_name
+  type    = each.value.resource_record_type
+  zone_id = var.route53_zone_id
+  records = [each.value.resource_record_value]
+  ttl     = 300
+}
+
+resource "aws_acm_certificate_validation" "tm_cert_validation" {
+  certificate_arn         = aws_acm_certificate.tm_cert.arn
+  validation_record_fqdns = [for r in aws_route53_record.tm_cert_validation : r.fqdn]
+}
+
 resource "aws_lb_listener" "tm_https" {
+  depends_on        = [aws_acm_certificate_validation.tm_cert_validation]
   load_balancer_arn = aws_lb.tm_alb.arn
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = var.certificate_arn
+  certificate_arn   = aws_acm_certificate_validation.tm_cert_validation.certificate_arn
+
   default_action {
     type = "forward"
     forward {
@@ -70,56 +85,6 @@ resource "aws_lb_listener" "tm_https" {
         enabled  = false
         duration = 1
       }
-
     }
   }
 }
-
-resource "aws_acm_certificate" "tm_cert" {
-  domain_name       = "tm.lab.mohammedsayed.com"
-  validation_method = "DNS"
-}
-
-resource "aws_route53_record" "tm_cert_validation" {
-  name    = aws_acm_certificate.tm_cert.domain_validation_options[0].resource_record_name
-  type    = aws_acm_certificate.tm_cert.domain_validation_options[0].resource_record_type
-  zone_id = aws_route53_zone.this.id 
-  records = [aws_acm_certificate.tm_cert.domain_validation_options[0].resource_record_value]
-  ttl     = 300
-}
-
-resource "aws_acm_certificate_validation" "tm_cert_validation" {
-  certificate_arn         = aws_acm_certificate.tm_cert.arn
-  validation_record_fqdns = [aws_route53_record.tm_cert_validation.fqdn]
-}
-
-
-# resource "aws_s3_bucket" "access_logs_bucket" {
-#   bucket = "threat-modeling-tool--tf"
-# }
-
-# resource "aws_s3_bucket_policy" "access_logs_policy" {
-#   bucket = aws_s3_bucket.access_logs_bucket.id
-
-#   policy = jsonencode({
-#     Version = "2012-10-17",
-#     Statement = [
-#       {
-#         Effect = "Allow",
-#         Principal = {
-#           Service = "elasticloadbalancing.amazonaws.com"
-#         },
-#         Action = "s3:PutObject",
-#         Resource = "arn:aws:s3:::threat-modeling-tool--tf/access-logs/*",
-#         Condition = {
-#           StringEquals = {
-#             "aws:SourceAccount" = "767398132018"
-#           },
-#           ArnLike = {
-#             "aws:SourceArn" = "arn:aws:elasticloadbalancing:us-east-1:767398132018:loadbalancer/*"
-#           }
-#         }
-#       }
-#     ]
-#   })
-# }
