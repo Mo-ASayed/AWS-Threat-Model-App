@@ -75,6 +75,25 @@ resource "aws_lb_listener" "tm_https" {
   }
 }
 
+resource "aws_acm_certificate" "tm_cert" {
+  domain_name       = "tm.lab.mohammedsayed.com"
+  validation_method = "DNS"
+}
+
+resource "aws_route53_record" "tm_cert_validation" {
+  name    = aws_acm_certificate.tm_cert.domain_validation_options[0].resource_record_name
+  type    = aws_acm_certificate.tm_cert.domain_validation_options[0].resource_record_type
+  zone_id = aws_route53_zone.this.id 
+  records = [aws_acm_certificate.tm_cert.domain_validation_options[0].resource_record_value]
+  ttl     = 300
+}
+
+resource "aws_acm_certificate_validation" "tm_cert_validation" {
+  certificate_arn         = aws_acm_certificate.tm_cert.arn
+  validation_record_fqdns = [aws_route53_record.tm_cert_validation.fqdn]
+}
+
+
 # resource "aws_s3_bucket" "access_logs_bucket" {
 #   bucket = "threat-modeling-tool--tf"
 # }

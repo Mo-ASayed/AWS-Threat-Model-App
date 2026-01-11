@@ -23,10 +23,6 @@ variable "container_name" {
   description = "ECS container name"
 }
 
-# variable "container_image" {
-#   type        = string
-#   description = "ECS container image"
-# }
 
 variable "container_port" {
   type        = number
