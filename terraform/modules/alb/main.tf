@@ -71,7 +71,6 @@ resource "aws_route53_record" "tm_cert_validation" {
 # }
 
 resource "aws_lb_listener" "tm_https" {
-  depends_on        = [aws_acm_certificate_validation.tm_cert_validation]
   load_balancer_arn = aws_lb.tm_alb.arn
   port              = 443
   protocol          = "HTTPS"
