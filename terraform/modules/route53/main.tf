@@ -1,5 +1,9 @@
 resource "aws_route53_zone" "this" {
   name = var.zone_name
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_route53_record" "cname" {
