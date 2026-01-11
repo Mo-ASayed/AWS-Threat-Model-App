@@ -1,9 +1,9 @@
-resource "twingate_remote_network" "aws_network" {
+resource "twingate_remote_network" "ssltd_network" {
   name = "AWS Network"
 }
 
 resource "twingate_connector" "aws_connector" {
-  remote_network_id = twingate_remote_network.aws_network.id
+  remote_network_id = twingate_remote_network.ssltd_network.id
 }
 
 resource "twingate_connector_tokens" "aws_connector_tokens" {
@@ -26,7 +26,7 @@ module "twingate_connector" {
 
   name          = "tm-twingate-connector"
   ami           = data.aws_ami.latest.id
-  instance_type = "t2a.micro"
+  instance_type = "t2.micro"
 
   # Use existing VPC subnet and security group
   subnet_id              = module.vpc.public_subnets[0] # pick a subnet with internet access
@@ -55,7 +55,7 @@ module "twingate_connector" {
 resource "twingate_resource" "tm_app" {
   name              = "TM App"
   address           = module.alb.alb_dns_name
-  remote_network_id = twingate_remote_network.aws_network.id
+  remote_network_id = twingate_remote_network.ssltd_network.id
 
   access_group {
     group_id = twingate_group.admins.id

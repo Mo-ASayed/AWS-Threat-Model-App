@@ -19,6 +19,6 @@ provider "aws" {
 
 provider "twingate" {
   api_token = var.twingate_api_token
-  network   = "ssltd"
+  network   = var.twingate_network
 
 }
