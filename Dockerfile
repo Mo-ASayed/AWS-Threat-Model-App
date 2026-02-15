@@ -13,7 +13,7 @@ RUN yarn build && mv build dist
 
 
 # ---------- Runtime ----------
-FROM node:24.4.0-alpine3.20 AS runtime
+FROM node:24-alpine3.20 AS runtime
 
 ENV NODE_ENV=production
 WORKDIR /app
