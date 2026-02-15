@@ -4,12 +4,11 @@ resource "aws_security_group" "tm_ecs_sg" {
 
 
   ingress {
-    from_port       = 3000
-    to_port         = 3000
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
-    description     = "Allow traffic to app on port 3000"
-    security_groups = [var.connector_sg_id]
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow traffic to app on port 3000"
 
   }
 

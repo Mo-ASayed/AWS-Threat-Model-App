@@ -7,12 +7,9 @@ module "vpc" {
 }
 
 module "security_group" {
-  source          = "./modules/security-group"
-  sg_name         = "tm-ecs-sg"
-  vpc_id          = module.vpc.vpc_id
-  connector_sg_id = module.twingate_connector.sg_id
-
-
+  source  = "./modules/security-group"
+  sg_name = "tm-ecs-sg"
+  vpc_id  = module.vpc.vpc_id
 }
 
 module "alb" {
