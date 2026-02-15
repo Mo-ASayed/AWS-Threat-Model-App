@@ -1,30 +1,38 @@
-FROM node:24-alpine AS builder
+# ---------- Builder ----------
+FROM node:24.4.0-alpine3.20 AS builder
 
-# Set working directory
 WORKDIR /app
 
+# Install deps first for better caching
 COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-# Install dependencies, ignoring strict peer deps
-RUN yarn install --legacy-peer-deps
-
-# Copy the rest of the source files
+# Copy source and build
 COPY . .
-
 RUN yarn build && mv build dist
 
-FROM node:24-alpine
 
+# ---------- Runtime ----------
+FROM node:24.4.0-alpine3.20 AS runtime
+
+ENV NODE_ENV=production
 WORKDIR /app
 
-# Copy node_modules and built app from builder
-COPY --from=builder /app/node_modules ./node_modules
+# Create non root user
+RUN addgroup -S nodejs && adduser -S appuser -G nodejs
+
+# Copy only what is needed
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/yarn.lock ./
+
+# Install only production deps
+RUN yarn install --frozen-lockfile --production && yarn cache clean
+
+# Use non root user
+USER appuser
 
 EXPOSE 3000
 
-# Install serve to serve the build
-RUN yarn global add serve
-
-# Start the app
-CMD ["serve", "-s", "dist", "-l", "3000"]
+# Use local serve binary instead of global install
+CMD ["yarn", "serve", "-s", "dist", "-l", "3000"]

@@ -6,6 +6,6 @@ variable "twingate_api_token" {
 variable "twingate_network" {
   type        = string
   description = "The twingate network name"
-  default     = "ssltd"
+  default     = "sayedsylvainltd"
 
 }
