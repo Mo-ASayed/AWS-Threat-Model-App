@@ -32,3 +32,8 @@ output "route53_record" {
   description = "The Route53 record"
   value       = module.route53.route53_record
 }
+
+output "sg_id" {
+  description = "Security group ID of the Twingate connector"
+  value       = aws_instance.tm_twingate_connector.vpc_security_group_ids[0] # assuming 1 SG
+}

@@ -59,7 +59,7 @@ module "twingate_connector" {
 # 1️⃣ Create the Twingate resource
 resource "twingate_resource" "tm_app" {
   name              = "TM App"
-  address           = module.alb.alb_internal_dns_name
+  address           = module.alb.alb_dns_name
   remote_network_id = twingate_remote_network.ssltd_network.id
 
   access_group {
