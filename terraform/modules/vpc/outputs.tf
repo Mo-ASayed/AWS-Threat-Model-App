@@ -12,3 +12,7 @@ output "internet_gateway_id" {
   description = "The ID of the internet gateway"
   value       = aws_internet_gateway.tm_igw.id
 }
+
+output "private_subnets" {
+  value = aws_subnet.tm_private_subnet[*].id
+}

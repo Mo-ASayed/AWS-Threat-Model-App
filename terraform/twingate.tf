@@ -34,13 +34,18 @@ module "twingate_connector" {
 
   # user_data to configure Twingate
   user_data = <<-EOT
-    #!/bin/bash
-    set -e
-    mkdir -p /etc/twingate/
-    {
-      echo TWINGATE_URL="https://${var.twingate_network}.twingate.com"
-    } > /etc/twingate/connector.conf
-    sudo systemctl enable --now twingate-connector
+  #!/bin/bash
+  set -e
+
+  curl -fsSL https://binaries.twingate.com/connector/setup.sh | bash
+
+  cat <<EOF >/etc/twingate/connector.conf
+  TWINGATE_NETWORK=${var.twingate_network}
+  TWINGATE_ACCESS_TOKEN=${twingate_connector_tokens.aws_connector_tokens.access_token}
+  TWINGATE_REFRESH_TOKEN=${twingate_connector_tokens.aws_connector_tokens.refresh_token}
+  EOF
+
+  systemctl enable --now twingate-connector
   EOT
 
   root_block_device = [
@@ -54,7 +59,7 @@ module "twingate_connector" {
 # 1️⃣ Create the Twingate resource
 resource "twingate_resource" "tm_app" {
   name              = "TM App"
-  address           = module.alb.alb_dns_name
+  address           = module.alb.alb_internal_dns_name
   remote_network_id = twingate_remote_network.ssltd_network.id
 
   access_group {

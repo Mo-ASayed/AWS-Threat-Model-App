@@ -7,9 +7,11 @@ module "vpc" {
 }
 
 module "security_group" {
-  source  = "./modules/security-group"
-  sg_name = "tm-ecs-sg"
-  vpc_id  = module.vpc.vpc_id
+  source          = "./modules/security-group"
+  sg_name         = "tm-ecs-sg"
+  vpc_id          = module.vpc.vpc_id
+  connector_sg_id = module.twingate_connector.sg_id
+
 
 }
 
@@ -17,12 +19,13 @@ module "alb" {
   source            = "./modules/alb"
   alb_name          = "tm-alb"
   security_group_id = module.security_group.sg_id
-  subnet_ids        = module.vpc.public_subnets
+  subnet_ids        = module.vpc.private_subnets
   target_group_name = "tm-target-group"
   target_port       = 3000
   vpc_id            = module.vpc.vpc_id
   certificate_arn   = "arn:aws:acm:us-east-1:767398132018:certificate/0d8b3d30-0825-476a-94fe-6dc82d775a7f"
   route53_zone_id   = module.route53.zone_id
+  internal          = true
 }
 
 module "ecs" {
@@ -36,7 +39,7 @@ module "ecs" {
   container_port     = 3000
   service_name       = "tm-service"
   desired_count      = 1
-  subnet_ids         = module.vpc.public_subnets
+  subnet_ids         = module.vpc.private_subnets
   security_group_ids = [module.security_group.sg_id]
   // todo : add something here regarding using for statements
   target_group_arn   = module.alb.target_group_arn

@@ -37,3 +37,9 @@ variable "route53_zone_id" {
   description = "The ID of the Route53 hosted zone for ACM DNS validation"
   type        = string
 }
+
+variable "internal" {
+  description = "Whether the ALB is internal or internet-facing"
+  type        = bool
+  default     = false
+}

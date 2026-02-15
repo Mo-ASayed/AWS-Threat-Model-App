@@ -41,3 +41,15 @@ resource "aws_route_table_association" "tm_subnet_rt_assoc" {
   subnet_id      = aws_subnet.tm_public_subnet[count.index].id
   route_table_id = aws_route_table.tm_public_rt.id
 }
+
+
+resource "aws_subnet" "tm_private_subnet" {
+  count                   = length(var.private_subnet_cidrs)
+  vpc_id                  = aws_vpc.tm_vpc.id
+  cidr_block              = var.private_subnet_cidrs[count.index]
+  availability_zone       = var.availability_zones[count.index]
+  map_public_ip_on_launch = false
+  tags = {
+    Name = "${var.vpc_name}-private-${count.index + 1}"
+  }
+}
