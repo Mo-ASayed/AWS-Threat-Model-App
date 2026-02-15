@@ -9,7 +9,7 @@ resource "aws_security_group" "tm_ecs_sg" {
     protocol        = "tcp"
     cidr_blocks     = ["0.0.0.0/0"]
     description     = "Allow traffic to app on port 3000"
-    security_groups = [var.connector_sg_id] # 👈 passed from Twingate connector
+    security_groups = [var.connector_sg_id]
 
   }
 
