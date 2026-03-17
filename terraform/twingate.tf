@@ -29,8 +29,9 @@ module "twingate_connector" {
   instance_type = "t2.micro"
 
   # Use existing VPC subnet and security group
-  subnet_id              = module.vpc.public_subnets[0] # pick a subnet with internet access
-  vpc_security_group_ids = [module.security_group.sg_id]
+  subnet_id                   = module.vpc.public_subnets[0] # pick a subnet with internet access
+  vpc_security_group_ids      = [module.security_group.sg_id]
+  associate_public_ip_address = true
 
   # user_data to configure Twingate
   user_data = <<-EOT

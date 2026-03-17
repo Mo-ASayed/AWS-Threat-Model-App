@@ -44,6 +44,7 @@ resource "aws_lb_listener" "tm_http" {
       status_code = "HTTP_301"
     }
   }
+  depends_on = [aws_acm_certificate_validation.tm_cert_validation]
 }
 
 resource "aws_acm_certificate" "tm_cert" {
@@ -61,14 +62,14 @@ resource "aws_route53_record" "tm_cert_validation" {
   ttl     = 300
 }
 
-# resource "aws_acm_certificate_validation" "tm_cert_validation" {
-#   certificate_arn         = aws_acm_certificate.tm_cert.arn
-#   validation_record_fqdns = [for r in aws_route53_record.tm_cert_validation : r.fqdn]
+resource "aws_acm_certificate_validation" "tm_cert_validation" {
+  certificate_arn         = aws_acm_certificate.tm_cert.arn
+  validation_record_fqdns = [for r in aws_route53_record.tm_cert_validation : r.fqdn]
 
-#   timeouts {
-#     create = "10m"
-#   }
-# }
+  timeouts {
+    create = "10m"
+  }
+}
 
 resource "aws_lb_listener" "tm_https" {
   load_balancer_arn = aws_lb.tm_alb.arn
