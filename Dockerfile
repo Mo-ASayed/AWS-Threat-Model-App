@@ -1,40 +1,23 @@
-FROM node:24-alpine3.20 AS builder
-
-# Patch base image packages (fixes OpenSSL CVE)
-RUN apk upgrade --no-cache
+# ─── Stage 1: Build ───────────────────────────────────────
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install deps first for caching
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY yarn.lock package.json ./
+RUN yarn install --frozen-lockfile && yarn cache clean
 
-# Copy source and build
 COPY . .
-RUN yarn build && mv build dist
+RUN DISABLE_ESLINT_PLUGIN=true yarn run build
 
+# ─── Stage 2: Runtime ─────────────────────────────────────
+FROM node:alpine
 
-FROM node:24-alpine3.20 AS runtime
+RUN npm install -g serve
 
-# Patch packages here too (important!)
-RUN apk upgrade --no-cache
+COPY --from=builder /app/build ./build
 
-ENV NODE_ENV=production
-WORKDIR /app
-
-# Create non root user
-RUN addgroup -S nodejs && adduser -S appuser -G nodejs
-
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/yarn.lock ./
-
-# Install only production deps
-RUN yarn install --frozen-lockfile --production \
-    && yarn cache clean
-
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
 EXPOSE 3000
-
-CMD ["yarn", "serve", "-s", "dist", "-l", "3000"]
+CMD ["serve", "-s", "build", "-l", "3000"]
