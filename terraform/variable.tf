@@ -3,6 +3,7 @@ variable "twingate_api_token" {
   description = "Twingate API token from GitHub Secrets"
 }
 
+// Check why this isnt working correctly.
 variable "twingate_network" {
   type        = string
   description = "The twingate network name"
